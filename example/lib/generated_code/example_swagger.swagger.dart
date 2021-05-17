@@ -155,317 +155,171 @@ abstract class ExampleSwagger extends ChopperService {
       {@Path('username') required String? username});
 }
 
-@JsonSerializable(explicitToJson: true)
 class Order {
-  Order({
-    required this.id,
-    required this.petId,
-    required this.quantity,
-    required this.shipDateTime,
-    required this.shipDate,
-    required this.status,
-    required this.complete,
-  });
+  Order(
+      {required id,
+      required petId,
+      required quantity,
+      required shipDateTime,
+      required shipDate,
+      required status,
+      required complete});
 
-  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
-  final int? petId;
-  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
-  final int? quantity;
-  @JsonKey(name: 'shipDateTime', includeIfNull: false)
-  final DateTime? shipDateTime;
-  @JsonKey(name: 'shipDate', includeIfNull: false, toJson: _dateToJson)
-  final DateTime? shipDate;
-  @JsonKey(name: 'status', includeIfNull: false)
-  final enums.OrderStatus? status;
-  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
-  final bool? complete;
-  static const fromJsonFactory = _$OrderFromJson;
-  static const toJsonFactory = _$OrderToJson;
-  Map<String, dynamic> toJson() => _$OrderToJson(this);
+  @JsonKey(name: 'petId', defaultValue: 'null', includeIfNull: 'false')
+  int petId;
+
+  @JsonKey(name: 'quantity', defaultValue: 'null', includeIfNull: 'false')
+  int quantity;
+
+  @JsonKey(name: 'shipDateTime', defaultValue: 'null', includeIfNull: 'false')
+  String shipDateTime;
+
+  @JsonKey(name: 'shipDate', defaultValue: 'null', includeIfNull: 'false')
+  String shipDate;
+
+  @JsonKey(name: 'status', defaultValue: 'null', includeIfNull: 'false')
+  String status;
+
+  @JsonKey(name: 'complete', defaultValue: 'false', includeIfNull: 'false')
+  bool complete;
 }
 
-extension $OrderExtension on Order {
-  Order copyWith(
-      {int? id,
-      int? petId,
-      int? quantity,
-      DateTime? shipDateTime,
-      DateTime? shipDate,
-      enums.OrderStatus? status,
-      bool? complete}) {
-    return Order(
-        id: id ?? this.id,
-        petId: petId ?? this.petId,
-        quantity: quantity ?? this.quantity,
-        shipDateTime: shipDateTime ?? this.shipDateTime,
-        shipDate: shipDate ?? this.shipDate,
-        status: status ?? this.status,
-        complete: complete ?? this.complete);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class OrderWithDash {
-  OrderWithDash({
-    required this.id,
-    required this.petId,
-    required this.quantity,
-    required this.shipDate,
-    required this.status,
-    required this.complete,
-  });
+  OrderWithDash(
+      {required id,
+      required petId,
+      required quantity,
+      required shipDate,
+      required status,
+      required complete});
 
-  factory OrderWithDash.fromJson(Map<String, dynamic> json) =>
-      _$OrderWithDashFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
-  final int? petId;
-  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
-  final int? quantity;
-  @JsonKey(name: 'shipDate', includeIfNull: false)
-  final DateTime? shipDate;
-  @JsonKey(name: 'status', includeIfNull: false)
-  final enums.OrderWithDashStatus? status;
-  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
-  final bool? complete;
-  static const fromJsonFactory = _$OrderWithDashFromJson;
-  static const toJsonFactory = _$OrderWithDashToJson;
-  Map<String, dynamic> toJson() => _$OrderWithDashToJson(this);
+  @JsonKey(name: 'petId', defaultValue: 'null', includeIfNull: 'false')
+  int petId;
+
+  @JsonKey(name: 'quantity', defaultValue: 'null', includeIfNull: 'false')
+  int quantity;
+
+  @JsonKey(name: 'shipDate', defaultValue: 'null', includeIfNull: 'false')
+  String shipDate;
+
+  @JsonKey(name: 'status', defaultValue: 'null', includeIfNull: 'false')
+  String status;
+
+  @JsonKey(name: 'complete', defaultValue: 'false', includeIfNull: 'false')
+  bool complete;
 }
 
-extension $OrderWithDashExtension on OrderWithDash {
-  OrderWithDash copyWith(
-      {int? id,
-      int? petId,
-      int? quantity,
-      DateTime? shipDate,
-      enums.OrderWithDashStatus? status,
-      bool? complete}) {
-    return OrderWithDash(
-        id: id ?? this.id,
-        petId: petId ?? this.petId,
-        quantity: quantity ?? this.quantity,
-        shipDate: shipDate ?? this.shipDate,
-        status: status ?? this.status,
-        complete: complete ?? this.complete);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class Category {
-  Category({
-    required this.id,
-    required this.name,
-  });
+  Category({required id, required name});
 
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  static const fromJsonFactory = _$CategoryFromJson;
-  static const toJsonFactory = _$CategoryToJson;
-  Map<String, dynamic> toJson() => _$CategoryToJson(this);
+  @JsonKey(name: 'name', defaultValue: 'null', includeIfNull: 'false')
+  String name;
 }
 
-extension $CategoryExtension on Category {
-  Category copyWith({int? id, String? name}) {
-    return Category(id: id ?? this.id, name: name ?? this.name);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class User {
-  User({
-    required this.id,
-    required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.password,
-    required this.phone,
-    required this.userStatus,
-  });
+  User(
+      {required id,
+      required username,
+      required firstName,
+      required lastName,
+      required email,
+      required password,
+      required phone,
+      required userStatus});
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'username', includeIfNull: false, defaultValue: '')
-  final String? username;
-  @JsonKey(name: 'firstName', includeIfNull: false, defaultValue: '')
-  final String? firstName;
-  @JsonKey(name: 'lastName', includeIfNull: false, defaultValue: '')
-  final String? lastName;
-  @JsonKey(name: 'email', includeIfNull: false, defaultValue: '')
-  final String? email;
-  @JsonKey(name: 'password', includeIfNull: false, defaultValue: '')
-  final String? password;
-  @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
-  final String? phone;
-  @JsonKey(name: 'userStatus', includeIfNull: false, defaultValue: 36)
-  final int? userStatus;
-  static const fromJsonFactory = _$UserFromJson;
-  static const toJsonFactory = _$UserToJson;
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  @JsonKey(name: 'username', defaultValue: 'null', includeIfNull: 'false')
+  String username;
+
+  @JsonKey(name: 'firstName', defaultValue: 'null', includeIfNull: 'false')
+  String firstName;
+
+  @JsonKey(name: 'lastName', defaultValue: 'null', includeIfNull: 'false')
+  String lastName;
+
+  @JsonKey(name: 'email', defaultValue: 'null', includeIfNull: 'false')
+  String email;
+
+  @JsonKey(name: 'password', defaultValue: 'null', includeIfNull: 'false')
+  String password;
+
+  @JsonKey(name: 'phone', defaultValue: 'null', includeIfNull: 'false')
+  String phone;
+
+  @JsonKey(name: 'userStatus', defaultValue: 'null', includeIfNull: 'false')
+  int userStatus;
 }
 
-extension $UserExtension on User {
-  User copyWith(
-      {int? id,
-      String? username,
-      String? firstName,
-      String? lastName,
-      String? email,
-      String? password,
-      String? phone,
-      int? userStatus}) {
-    return User(
-        id: id ?? this.id,
-        username: username ?? this.username,
-        firstName: firstName ?? this.firstName,
-        lastName: lastName ?? this.lastName,
-        email: email ?? this.email,
-        password: password ?? this.password,
-        phone: phone ?? this.phone,
-        userStatus: userStatus ?? this.userStatus);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class Tag {
-  Tag({
-    required this.id,
-    required this.name,
-  });
+  Tag({required id, required name});
 
-  factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  static const fromJsonFactory = _$TagFromJson;
-  static const toJsonFactory = _$TagToJson;
-  Map<String, dynamic> toJson() => _$TagToJson(this);
+  @JsonKey(name: 'name', defaultValue: 'null', includeIfNull: 'false')
+  String name;
 }
 
-extension $TagExtension on Tag {
-  Tag copyWith({int? id, String? name}) {
-    return Tag(id: id ?? this.id, name: name ?? this.name);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class Pet {
-  Pet({
-    required this.id,
-    required this.category,
-    required this.name,
-    required this.photoUrls,
-    required this.tags,
-    required this.status,
-  });
+  Pet(
+      {required id,
+      required category,
+      required name,
+      required photoUrls,
+      required tags,
+      required status});
 
-  factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'category', includeIfNull: false)
-  final Category? category;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
-  final List<String>? photoUrls;
-  @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
-  final List<Tag>? tags;
-  @JsonKey(name: 'status', includeIfNull: false)
-  final enums.PetStatus? status;
-  static const fromJsonFactory = _$PetFromJson;
-  static const toJsonFactory = _$PetToJson;
-  Map<String, dynamic> toJson() => _$PetToJson(this);
+  @JsonKey(name: 'category', defaultValue: 'null', includeIfNull: 'false')
+  undefinedType category;
+
+  @JsonKey(name: 'name', defaultValue: 'null', includeIfNull: 'false')
+  String name;
+
+  @JsonKey(name: 'photoUrls', defaultValue: 'null', includeIfNull: 'false')
+  undefinedType photoUrls;
+
+  @JsonKey(name: 'tags', defaultValue: 'null', includeIfNull: 'false')
+  undefinedType tags;
+
+  @JsonKey(name: 'status', defaultValue: 'null', includeIfNull: 'false')
+  String status;
 }
 
-extension $PetExtension on Pet {
-  Pet copyWith(
-      {int? id,
-      Category? category,
-      String? name,
-      List<String>? photoUrls,
-      List<Tag>? tags,
-      enums.PetStatus? status}) {
-    return Pet(
-        id: id ?? this.id,
-        category: category ?? this.category,
-        name: name ?? this.name,
-        photoUrls: photoUrls ?? this.photoUrls,
-        tags: tags ?? this.tags,
-        status: status ?? this.status);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class ApiResponse {
-  ApiResponse({
-    required this.code,
-    required this.type,
-    required this.message,
-  });
+  ApiResponse({required code, required type, required message});
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) =>
-      _$ApiResponseFromJson(json);
+  @JsonKey(name: 'code', defaultValue: 'null', includeIfNull: 'false')
+  int code;
 
-  @JsonKey(name: 'code', includeIfNull: false, defaultValue: 36)
-  final int? code;
-  @JsonKey(name: 'type', includeIfNull: false, defaultValue: '')
-  final String? type;
-  @JsonKey(name: 'message', includeIfNull: false, defaultValue: '')
-  final String? message;
-  static const fromJsonFactory = _$ApiResponseFromJson;
-  static const toJsonFactory = _$ApiResponseToJson;
-  Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+  @JsonKey(name: 'type', defaultValue: 'null', includeIfNull: 'false')
+  String type;
+
+  @JsonKey(name: 'message', defaultValue: 'null', includeIfNull: 'false')
+  String message;
 }
 
-extension $ApiResponseExtension on ApiResponse {
-  ApiResponse copyWith({int? code, String? type, String? message}) {
-    return ApiResponse(
-        code: code ?? this.code,
-        type: type ?? this.type,
-        message: message ?? this.message);
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class PetPost$Response {
-  PetPost$Response({
-    required this.id,
-    required this.petId,
-  });
+  PetPost$Response({required id, required petId});
 
-  factory PetPost$Response.fromJson(Map<String, dynamic> json) =>
-      _$PetPost$ResponseFromJson(json);
+  @JsonKey(name: 'id', defaultValue: 'null', includeIfNull: 'false')
+  int id;
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
-  final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
-  final int? petId;
-  static const fromJsonFactory = _$PetPost$ResponseFromJson;
-  static const toJsonFactory = _$PetPost$ResponseToJson;
-  Map<String, dynamic> toJson() => _$PetPost$ResponseToJson(this);
-}
-
-extension $PetPost$ResponseExtension on PetPost$Response {
-  PetPost$Response copyWith({int? id, int? petId}) {
-    return PetPost$Response(id: id ?? this.id, petId: petId ?? this.petId);
-  }
+  @JsonKey(name: 'petId', defaultValue: 'null', includeIfNull: 'false')
+  int petId;
 }
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);

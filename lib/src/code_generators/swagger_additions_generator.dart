@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
@@ -189,10 +190,9 @@ final jsonDecoder = CustomJsonDecoder(${fileName.pascalCase}JsonDecoderMappings)
         ? "baseUrl:  'https://$host$basePath'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
-    final converterString =
-        options.withBaseUrl && options.withConverter
-            ? 'converter: JsonSerializableConverter(),'
-            : 'converter: chopper.JsonConverter(),';
+    final converterString = options.withBaseUrl && options.withConverter
+        ? 'converter: JsonSerializableConverter(),'
+        : 'converter: chopper.JsonConverter(),';
 
     final chopperClientBody = '''
     if(client!=null){
@@ -206,5 +206,94 @@ final jsonDecoder = CustomJsonDecoder(${fileName.pascalCase}JsonDecoderMappings)
     return _\$$className(newClient);
 ''';
     return chopperClientBody;
+  }
+
+  static String genetateEnumFromJsonToJsonMethods(
+      List<String> enumNames, bool enumsCaseSensitive) {
+    return enumNames
+        .map((e) => _generateEnumFromJsonToJson(e, enumsCaseSensitive))
+        .join('\n');
+  }
+
+  static String _generateEnumFromJsonToJson(
+      String enumName, bool enumsCaseSensitive) {
+    final neededName = SwaggerModelsGenerator.getValidatedClassName(
+        enumName.replaceFirst('enums.', ''));
+
+    final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
+
+    return '''
+String? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
+  return enums.\$${neededName}Map[${neededName.camelCase}];
+}
+
+enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return enums.$neededName.swaggerGeneratedUnknown;
+  }
+
+  return enums.\$${neededName}Map.entries
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> ${neededName.camelCase}ListToJson(
+    List<enums.$neededName>? ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return [];
+  }
+
+  return ${neededName.camelCase}
+      .map((e) => enums.\$${neededName}Map[e]!)
+      .toList();
+}
+
+List<enums.$neededName> ${neededName.camelCase}ListFromJson(
+    List? ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return [];
+  }
+
+  return ${neededName.camelCase}
+      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
+      .toList();
+}
+    ''';
+  }
+
+  static String generateCopyWithContent(
+      String generatedProperties, String validatedClassName) {
+    final splittedProperties = generatedProperties
+        .split(';')
+        .where((element) => element.isNotEmpty)
+        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .map((e) {
+      final items = e.split(' ');
+      if (!items.first.endsWith('?')) {
+        items[0] += '?';
+      }
+
+      return items[0] + ' ' + items[1];
+    }).toList();
+
+    if (splittedProperties.isEmpty) {
+      return '';
+    }
+
+    final spittedPropertiesJoined = splittedProperties.join(', ');
+
+    final splittedPropertiesNamesContent = splittedProperties
+        .map((e) => e.substring(e.indexOf(' ') + 1))
+        .map((e) => '$e: $e ?? this.$e')
+        .join(',\n');
+
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
 }

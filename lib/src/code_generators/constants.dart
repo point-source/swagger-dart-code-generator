@@ -17,12 +17,16 @@ const kBasicTypes = [
 
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
+const kJsonKey = 'JsonKey';
 const kResponse = 'Response';
 const kFutureResponse = 'Future<chopper.Response>';
 
 
 //Request types
 const kPath = 'path';
+const kName = 'name';
+const kDefaultValue = 'defaultValue';
+const kIncludeIfNull = 'includeIfNull';
 const kFormData = 'formData';
 
 const kDefaultBodyParameter = 'Object';
