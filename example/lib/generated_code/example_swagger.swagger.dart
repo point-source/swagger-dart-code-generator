@@ -1,12 +1,14 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
+
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'example_swagger.enums.swagger.dart' as enums;
 export 'example_swagger.enums.swagger.dart';
 
-part 'example_swagger.swagger.chopper2.dart';
-part 'example_swagger.swagger.g2.dart';
+part 'example_swagger.swagger.chopper.dart';
+part 'example_swagger.swagger.g.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
@@ -20,9 +22,9 @@ abstract class ExampleSwagger extends ChopperService {
     }
 
     final newClient = ChopperClient(
-        services: [_$ExampleSwagger()],
-        converter: JsonSerializableConverter(),
-        baseUrl: 'https://petstore.swagger.io/v2');
+      services: [_$ExampleSwagger()],
+      converter: chopper.JsonConverter(), /*baseUrl: YOUR_BASE_URL*/
+    );
     return _$ExampleSwagger(newClient);
   }
 
@@ -47,9 +49,9 @@ abstract class ExampleSwagger extends ChopperService {
       List<enums.PetFindByStatusGetColor>? color}) {
     return _petFindByStatusGet(
         status: enums.$PetFindByStatusGetStatusMap[status],
-        color: color!.map((element) {
-          enums.$PetFindByStatusGetColorMap[element];
-        }).toList());
+        color: color!
+            .map((element) => enums.$PetFindByStatusGetColorMap[element])
+            .toList());
   }
 
   @Get(path: '/pet/findByStatus')
@@ -111,7 +113,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///Returns pet inventories by status
 
   @Get(path: '/store/inventory')
-  Future<chopper.Response<List<dynamic>>> storeInventoryGet();
+  Future<chopper.Response<Object>> storeInventoryGet();
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
@@ -207,22 +209,22 @@ final Map<Type, Object Function(Map<String, dynamic>)>
 @JsonSerializable(explicitToJson: true)
 class Order {
   Order({
-    required this.id,
-    required this.petId,
-    required this.quantity,
-    required this.shipDateTime,
-    required this.shipDate,
-    required this.status,
-    required this.complete,
+    this.id,
+    this.petId,
+    this.quantity,
+    this.shipDateTime,
+    this.shipDate,
+    this.status,
+    this.complete,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'petId', includeIfNull: false)
   final int? petId;
-  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'quantity', includeIfNull: false)
   final int? quantity;
   @JsonKey(name: 'shipDateTime', includeIfNull: false)
   final DateTime? shipDateTime;
@@ -239,6 +241,30 @@ class Order {
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
   Map<String, dynamic> toJson() => _$OrderToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Order &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.petId, petId) ||
+                const DeepCollectionEquality().equals(other.petId, petId)) &&
+            (identical(other.quantity, quantity) ||
+                const DeepCollectionEquality()
+                    .equals(other.quantity, quantity)) &&
+            (identical(other.shipDateTime, shipDateTime) ||
+                const DeepCollectionEquality()
+                    .equals(other.shipDateTime, shipDateTime)) &&
+            (identical(other.shipDate, shipDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.shipDate, shipDate)) &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)) &&
+            (identical(other.complete, complete) ||
+                const DeepCollectionEquality()
+                    .equals(other.complete, complete)));
+  }
 }
 
 extension $OrderExtension on Order {
@@ -264,22 +290,22 @@ extension $OrderExtension on Order {
 @JsonSerializable(explicitToJson: true)
 class OrderWithDash {
   OrderWithDash({
-    required this.id,
-    required this.petId,
-    required this.quantity,
-    required this.shipDate,
-    required this.status,
-    required this.complete,
+    this.id,
+    this.petId,
+    this.quantity,
+    this.shipDate,
+    this.status,
+    this.complete,
   });
 
   factory OrderWithDash.fromJson(Map<String, dynamic> json) =>
       _$OrderWithDashFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'petId', includeIfNull: false)
   final int? petId;
-  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'quantity', includeIfNull: false)
   final int? quantity;
   @JsonKey(name: 'shipDate', includeIfNull: false)
   final DateTime? shipDate;
@@ -294,6 +320,27 @@ class OrderWithDash {
   static const fromJsonFactory = _$OrderWithDashFromJson;
   static const toJsonFactory = _$OrderWithDashToJson;
   Map<String, dynamic> toJson() => _$OrderWithDashToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is OrderWithDash &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.petId, petId) ||
+                const DeepCollectionEquality().equals(other.petId, petId)) &&
+            (identical(other.quantity, quantity) ||
+                const DeepCollectionEquality()
+                    .equals(other.quantity, quantity)) &&
+            (identical(other.shipDate, shipDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.shipDate, shipDate)) &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)) &&
+            (identical(other.complete, complete) ||
+                const DeepCollectionEquality()
+                    .equals(other.complete, complete)));
+  }
 }
 
 extension $OrderWithDashExtension on OrderWithDash {
@@ -317,20 +364,30 @@ extension $OrderWithDashExtension on OrderWithDash {
 @JsonSerializable(explicitToJson: true)
 class Category {
   Category({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
   @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
   final String? name;
   static const fromJsonFactory = _$CategoryFromJson;
   static const toJsonFactory = _$CategoryToJson;
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Category &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
+  }
 }
 
 extension $CategoryExtension on Category {
@@ -342,19 +399,19 @@ extension $CategoryExtension on Category {
 @JsonSerializable(explicitToJson: true)
 class User {
   User({
-    required this.id,
-    required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.password,
-    required this.phone,
-    required this.userStatus,
+    this.id,
+    this.username,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.password,
+    this.phone,
+    this.userStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
   @JsonKey(name: 'username', includeIfNull: false, defaultValue: '')
   final String? username;
@@ -368,11 +425,38 @@ class User {
   final String? password;
   @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
   final String? phone;
-  @JsonKey(name: 'userStatus', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'userStatus', includeIfNull: false)
   final int? userStatus;
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is User &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.firstName, firstName) ||
+                const DeepCollectionEquality()
+                    .equals(other.firstName, firstName)) &&
+            (identical(other.lastName, lastName) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastName, lastName)) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality()
+                    .equals(other.password, password)) &&
+            (identical(other.phone, phone) ||
+                const DeepCollectionEquality().equals(other.phone, phone)) &&
+            (identical(other.userStatus, userStatus) ||
+                const DeepCollectionEquality()
+                    .equals(other.userStatus, userStatus)));
+  }
 }
 
 extension $UserExtension on User {
@@ -400,19 +484,29 @@ extension $UserExtension on User {
 @JsonSerializable(explicitToJson: true)
 class Tag {
   Tag({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
   });
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
   @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
   final String? name;
   static const fromJsonFactory = _$TagFromJson;
   static const toJsonFactory = _$TagToJson;
   Map<String, dynamic> toJson() => _$TagToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Tag &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
+  }
 }
 
 extension $TagExtension on Tag {
@@ -424,24 +518,24 @@ extension $TagExtension on Tag {
 @JsonSerializable(explicitToJson: true)
 class Pet {
   Pet({
-    required this.id,
+    this.id,
     this.category,
-    required this.name,
-    required this.photoUrls,
-    required this.tags,
-    required this.status,
+    this.name,
+    this.photoUrls,
+    this.tags,
+    this.status,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
   @JsonKey(name: 'category', includeIfNull: false)
   final Category? category;
   @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
   final String? name;
-  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <dynamic>[])
-  final List<dynamic>? photoUrls;
+  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
+  final List<String>? photoUrls;
   @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
   final List<Tag>? tags;
   @JsonKey(
@@ -453,6 +547,26 @@ class Pet {
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
   Map<String, dynamic> toJson() => _$PetToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Pet &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.category, category) ||
+                const DeepCollectionEquality()
+                    .equals(other.category, category)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.photoUrls, photoUrls) ||
+                const DeepCollectionEquality()
+                    .equals(other.photoUrls, photoUrls)) &&
+            (identical(other.tags, tags) ||
+                const DeepCollectionEquality().equals(other.tags, tags)) &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)));
+  }
 }
 
 extension $PetExtension on Pet {
@@ -460,7 +574,7 @@ extension $PetExtension on Pet {
       {int? id,
       Category? category,
       String? name,
-      List<dynamic>? photoUrls,
+      List<String>? photoUrls,
       List<Tag>? tags,
       enums.PetStatus? status}) {
     return Pet(
@@ -476,15 +590,15 @@ extension $PetExtension on Pet {
 @JsonSerializable(explicitToJson: true)
 class ApiResponse {
   ApiResponse({
-    required this.code,
-    required this.type,
-    required this.message,
+    this.code,
+    this.type,
+    this.message,
   });
 
   factory ApiResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiResponseFromJson(json);
 
-  @JsonKey(name: 'code', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'code', includeIfNull: false)
   final int? code;
   @JsonKey(name: 'type', includeIfNull: false, defaultValue: '')
   final String? type;
@@ -493,6 +607,18 @@ class ApiResponse {
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
   Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ApiResponse &&
+            (identical(other.code, code) ||
+                const DeepCollectionEquality().equals(other.code, code)) &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.message, message) ||
+                const DeepCollectionEquality().equals(other.message, message)));
+  }
 }
 
 extension $ApiResponseExtension on ApiResponse {
@@ -507,20 +633,30 @@ extension $ApiResponseExtension on ApiResponse {
 @JsonSerializable(explicitToJson: true)
 class PetPost$Response {
   PetPost$Response({
-    required this.id,
-    required this.petId,
+    this.id,
+    this.petId,
   });
 
   factory PetPost$Response.fromJson(Map<String, dynamic> json) =>
       _$PetPost$ResponseFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false)
   final int? id;
-  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
+  @JsonKey(name: 'petId', includeIfNull: false)
   final int? petId;
   static const fromJsonFactory = _$PetPost$ResponseFromJson;
   static const toJsonFactory = _$PetPost$ResponseToJson;
   Map<String, dynamic> toJson() => _$PetPost$ResponseToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PetPost$Response &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.petId, petId) ||
+                const DeepCollectionEquality().equals(other.petId, petId)));
+  }
 }
 
 extension $PetPost$ResponseExtension on PetPost$Response {
@@ -541,7 +677,10 @@ enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
   }
 
   return enums.$PetFindByStatusGetStatusMap.entries
-      .firstWhere((element) => element.value == petFindByStatusGetStatus,
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              petFindByStatusGetStatus.toLowerCase(),
           orElse: () => const MapEntry(
               enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown, ''))
       .key;
@@ -581,7 +720,10 @@ enums.PetFindByStatusGetColor petFindByStatusGetColorFromJson(
   }
 
   return enums.$PetFindByStatusGetColorMap.entries
-      .firstWhere((element) => element.value == petFindByStatusGetColor,
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              petFindByStatusGetColor.toLowerCase(),
           orElse: () => const MapEntry(
               enums.PetFindByStatusGetColor.swaggerGeneratedUnknown, ''))
       .key;
@@ -619,7 +761,8 @@ enums.OrderStatus orderStatusFromJson(String? orderStatus) {
   }
 
   return enums.$OrderStatusMap.entries
-      .firstWhere((element) => element.value == orderStatus,
+      .firstWhere(
+          (element) => element.value.toLowerCase() == orderStatus.toLowerCase(),
           orElse: () =>
               const MapEntry(enums.OrderStatus.swaggerGeneratedUnknown, ''))
       .key;
@@ -653,7 +796,9 @@ enums.OrderWithDashStatus orderWithDashStatusFromJson(
   }
 
   return enums.$OrderWithDashStatusMap.entries
-      .firstWhere((element) => element.value == orderWithDashStatus,
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() == orderWithDashStatus.toLowerCase(),
           orElse: () => const MapEntry(
               enums.OrderWithDashStatus.swaggerGeneratedUnknown, ''))
       .key;
@@ -691,7 +836,8 @@ enums.PetStatus petStatusFromJson(String? petStatus) {
   }
 
   return enums.$PetStatusMap.entries
-      .firstWhere((element) => element.value == petStatus,
+      .firstWhere(
+          (element) => element.value.toLowerCase() == petStatus.toLowerCase(),
           orElse: () =>
               const MapEntry(enums.PetStatus.swaggerGeneratedUnknown, ''))
       .key;
@@ -712,60 +858,6 @@ List<enums.PetStatus> petStatusListFromJson(List? petStatus) {
 
   return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
 }
-
-typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
-
-class CustomJsonDecoder {
-  CustomJsonDecoder(this.factories);
-
-  final Map<Type, JsonFactory> factories;
-
-  dynamic decode<T>(dynamic entity) {
-    if (entity is Iterable) {
-      return _decodeList<T>(entity);
-    }
-
-    if (entity is T) {
-      return entity;
-    }
-
-    if (entity is Map<String, dynamic>) {
-      return _decodeMap<T>(entity);
-    }
-
-    return entity;
-  }
-
-  T _decodeMap<T>(Map<String, dynamic> values) {
-    final jsonFactory = factories[T];
-    if (jsonFactory == null || jsonFactory is! JsonFactory<T>) {
-      return throw "Could not find factory for type $T. Is '$T: $T.fromJsonFactory' included in the CustomJsonDecoder instance creation in bootstrapper.dart?";
-    }
-
-    return jsonFactory(values);
-  }
-
-  List<T> _decodeList<T>(Iterable values) =>
-      values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
-}
-
-class JsonSerializableConverter extends chopper.JsonConverter {
-  @override
-  chopper.Response<ResultType> convertResponse<ResultType, Item>(
-      chopper.Response response) {
-    if (response.bodyString.isEmpty) {
-      // In rare cases, when let's say 204 (no content) is returned -
-      // we cannot decode the missing json with the result type specified
-      return chopper.Response(response.base, null, error: response.error);
-    }
-
-    final jsonRes = super.convertResponse(response);
-    return jsonRes.copyWith<ResultType>(
-        body: jsonDecoder.decode<Item>(jsonRes.body) as ResultType);
-  }
-}
-
-final jsonDecoder = CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings);
 
 // ignore: unused_element
 String? _dateToJson(DateTime? date) {
