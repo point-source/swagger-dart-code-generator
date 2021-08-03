@@ -1,4 +1,5 @@
 import 'package:build/build.dart';
+import 'package:glob/glob.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
@@ -16,6 +17,10 @@ const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) => {
+      '.swagger': [
+        '${options.outputFolder}$_indexFileName',
+        '${options.outputFolder}$_mappingFileName'
+      ],
       '${options.inputFolder}{{}}$_inputFileExtension': [
         '${options.outputFolder}{{}}.dart',
         '${options.outputFolder}{{}}$_outputFileExtension',
@@ -40,10 +45,17 @@ class SwaggerDartCodeGenerator implements Builder {
 
   final DartFormatter _formatter = DartFormatter();
 
+  List<String>? _files;
+
   @override
   Future<void> build(BuildStep buildStep) async {
+    if (!buildStep.inputId.path.startsWith(options.inputFolder)) return;
     final fileNameWithExtension =
         buildStep.inputId.pathSegments.last.replaceAll('-', '_');
+    if (fileNameWithExtension == '.placeholder') {
+      return;
+    }
+
     final fileNameWithoutExtension = fileNameWithExtension.split('.').first;
 
     final contents = await buildStep.readAsString(buildStep.inputId);
@@ -101,10 +113,13 @@ class SwaggerDartCodeGenerator implements Builder {
     }
 
     ///Write additional files on first input
-    if (buildExtensions.keys.first == buildStep.inputId.path) {
-      final files = buildExtensions.keys.map((e) => e.split('/').last).toList();
+    _files ??= await buildStep
+        .findAssets(Glob('${options.inputFolder}*.swagger'))
+        .map((AssetId asset) => asset.pathSegments.last)
+        .toList();
+    if (_files?.isNotEmpty ?? false) {
       await _generateAdditionalFiles(
-          files, buildStep.inputId.package, buildStep, models.isNotEmpty);
+          _files!, buildStep.inputId.package, buildStep, true);
     }
   }
 
