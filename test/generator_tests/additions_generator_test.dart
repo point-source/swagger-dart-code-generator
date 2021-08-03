@@ -6,10 +6,8 @@ void main() {
     final generator = SwaggerAdditionsGenerator();
 
     test('Should generate mapping for files', () {
-      final result = generator.generateConverterMappings(<String, List<String>>{
-        'someFile.dart': <String>['someFile.swagger.dart'],
-        'secondFile.dart': <String>['secondFile.swagger.dart']
-      }, true);
+      final result = generator.generateConverterMappings(
+          ['someFile.swagger', 'secondFile.swagger'], true);
 
       expect(result, contains('...SomeFileJsonDecoderMappings'));
       expect(result, contains('...SecondFileJsonDecoderMappings'));
@@ -32,14 +30,12 @@ void main() {
     });
 
     test('Should generate indexes file', () {
-      final result = generator.generateIndexes(<String, List<String>>{
-        'someFile.dart': <String>['someFile.swagger.dart'],
-        'secondFile.dart': <String>['secondFile.swagger.dart']
-      });
+      final result =
+          generator.generateIndexes(['someFile.swagger', 'secondFile.swagger']);
 
-      expect(result, contains("export 'someFile.dart.dart' show SomeFile;"));
-      expect(
-          result, contains("export 'secondFile.dart.dart' show SecondFile;"));
+      expect(result, contains("export 'someFile.swagger.dart' show SomeFile;"));
+      expect(result,
+          contains("export 'secondFile.swagger.dart' show SecondFile;"));
     });
   });
 

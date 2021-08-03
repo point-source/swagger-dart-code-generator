@@ -39,18 +39,18 @@ class SwaggerCodeGenerator {
     return openApi != null ? 3 : 2;
   }
 
-  String generateIndexes(
-          String dartCode, Map<String, List<String>> buildExtensions) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateIndexes(buildExtensions);
+  /// Accepts a list of file names (including extensions, but not paths)
+  String generateIndexes(List<String> files) =>
+      _getSwaggerAdditionsGenerator().generateIndexes(files);
 
-  String generateConverterMappings(String dartCode,
-          Map<String, List<String>> buildExtensions, bool hasModels) =>
-      _getSwaggerAdditionsGenerator(dartCode)
-          .generateConverterMappings(buildExtensions, hasModels);
+  /// Accepts a list of file names (including extensions, but not paths)
+  String generateConverterMappings(List<String> files, bool hasModels) =>
+      _getSwaggerAdditionsGenerator()
+          .generateConverterMappings(files, hasModels);
 
-  String generateImportsContent(String dartCode, String swaggerFileName,
-          bool hasModels, bool buildOnlyModels, bool hasEnums) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateImportsContent(
+  String generateImportsContent(String swaggerFileName, bool hasModels,
+          bool buildOnlyModels, bool hasEnums) =>
+      _getSwaggerAdditionsGenerator().generateImportsContent(
           swaggerFileName, hasModels, buildOnlyModels, hasEnums);
 
   String generateConverter(
@@ -81,15 +81,14 @@ class SwaggerCodeGenerator {
       _getSwaggerRequestsGenerator(dartCode)
           .generate(dartCode, className, fileName, options);
 
-  String generateCustomJsonConverter(
-          String dartCode, String fileName, bool hasModels) =>
-      _getSwaggerAdditionsGenerator(dartCode)
+  String generateCustomJsonConverter(String fileName, bool hasModels) =>
+      _getSwaggerAdditionsGenerator()
           .generateCustomJsonConverter(fileName, hasModels);
 
-  String generateDateToJson(String dartCode) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateDateToJson();
+  String generateDateToJson() =>
+      _getSwaggerAdditionsGenerator().generateDateToJson();
 
-  SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(String dartCode) =>
+  SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator() =>
       SwaggerAdditionsGenerator();
 
   SwaggerConverterGenerator _getSwaggerConverterGenerator(String dartCode) =>

@@ -63,7 +63,6 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final imports = codeGenerator.generateImportsContent(
-        contents,
         fileNameWithoutExtension,
         models.isNotEmpty,
         options.buildOnlyModels,
@@ -78,10 +77,10 @@ class SwaggerDartCodeGenerator implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
+    final customDecoder = codeGenerator.generateCustomJsonConverter(
         getFileNameWithoutExtension(fileNameWithExtension), models.isNotEmpty);
 
-    final dateToJson = codeGenerator.generateDateToJson(contents);
+    final dateToJson = codeGenerator.generateDateToJson();
 
     final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$_outputFileExtension');
@@ -103,8 +102,9 @@ class SwaggerDartCodeGenerator implements Builder {
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
+      final files = buildExtensions.keys.map((e) => e.split('/').last).toList();
       await _generateAdditionalFiles(
-          contents, buildStep.inputId, buildStep, models.isNotEmpty);
+          files, buildStep.inputId.package, buildStep, models.isNotEmpty);
     }
   }
 
@@ -154,23 +154,22 @@ $dateToJson
     }
   }
 
-  Future<void> _generateAdditionalFiles(String swaggerCode, AssetId inputId,
+  Future<void> _generateAdditionalFiles(List<String> files, String package,
       BuildStep buildStep, bool hasModels) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
-        AssetId(inputId.package, '${options.outputFolder}$_indexFileName');
+        AssetId(package, '${options.outputFolder}$_indexFileName');
 
-    final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
+    final imports = codeGenerator.generateIndexes(files);
 
     await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
 
     if (options.withConverter) {
       final mappingAssetId =
-          AssetId(inputId.package, '${options.outputFolder}$_mappingFileName');
+          AssetId(package, '${options.outputFolder}$_mappingFileName');
 
-      final mapping = codeGenerator.generateConverterMappings(
-          swaggerCode, buildExtensions, hasModels);
+      final mapping = codeGenerator.generateConverterMappings(files, hasModels);
 
       await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }
