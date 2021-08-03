@@ -2,7 +2,6 @@ import 'package:build/build.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
-import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 
 ///Returns instance of SwaggerDartCodeGenerator
@@ -16,28 +15,14 @@ const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
-Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
-  final filesList = Directory(options.inputFolder).listSync().where(
-      (FileSystemEntity file) => file.path.endsWith(_inputFileExtension));
-
-  final result = <String, List<String>>{};
-
-  filesList.forEach((FileSystemEntity element) {
-    final name =
-        element.path.split('/').last.split('.').first.replaceAll('-', '_');
-    result[element.path] = <String>[
-      '${options.outputFolder}$name$_outputFileExtension',
-      '${options.outputFolder}$name$_outputEnumsFileExtension',
-      '${options.outputFolder}$name$_outputResponsesFileExtension',
-    ];
-  });
-
-  ///Register additional outputs in first input
-  result[filesList.first.path]!.add('${options.outputFolder}$_indexFileName');
-  result[filesList.first.path]!.add('${options.outputFolder}$_mappingFileName');
-
-  return result;
-}
+Map<String, List<String>> _generateExtensions(GeneratorOptions options) => {
+      '${options.inputFolder}{{}}$_inputFileExtension': [
+        '${options.outputFolder}{{}}.dart',
+        '${options.outputFolder}{{}}$_outputFileExtension',
+        '${options.outputFolder}{{}}$_outputEnumsFileExtension',
+        '${options.outputFolder}{{}}$_outputResponsesFileExtension',
+      ]
+    };
 
 ///Root library entry
 class SwaggerDartCodeGenerator implements Builder {
