@@ -70,8 +70,11 @@ class SwaggerSchema {
   @JsonKey(name: 'discriminator', defaultValue: null)
   Discriminator? discriminator;
 
-  @JsonKey(name: 'nullable', defaultValue: false)
+  @JsonKey(name: 'nullable', defaultValue: false, readValue: _readNullable)
   bool isNullable;
+
+  static bool _readNullable(Map json, String key) =>
+      (json[key] ?? json[kIsNullable] ?? false) as bool;
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
@@ -91,20 +94,18 @@ class SwaggerSchema {
       fromJson: _additionalsFromJson)
   bool hasAdditionalProperties;
 
+  @JsonKey(name: kEnumNames, readValue: _readEnumNames)
   List<String>? enumNames;
 
-  factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
-      _$SwaggerSchemaFromJson(json)
-        ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
-            ?.map((e) => e as String)
-            .toList()
-        ..isNullable =
-            (json[kIsNullable] ?? json[kIsNullable] ?? false) as bool;
+  static List<String>? _readEnumNames(Map json, String key) =>
+      ((json[key] ?? json[kEnumVarnames]) as List?)
+          ?.map((e) => e as String)
+          .toList();
 
-  Map<String, dynamic> toJson() => {
-        ..._$SwaggerSchemaToJson(this),
-        if (enumNames != null) kEnumNames: enumNames,
-      };
+  factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
+      _$SwaggerSchemaFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SwaggerSchemaToJson(this);
 }
 
 @JsonSerializable()
